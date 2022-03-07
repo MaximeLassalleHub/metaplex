@@ -207,8 +207,7 @@ export async function uploadV2({
 
   if (dedupedAssetKeys.length) {
     log.info(
-      `Starting upload for [${
-        dedupedAssetKeys.length
+      `Starting upload for [${dedupedAssetKeys.length
       }] items, format ${JSON.stringify(dedupedAssetKeys[0])}`,
     );
   }
@@ -264,8 +263,9 @@ export async function uploadV2({
         cliProgress.Presets.shades_classic,
       );
       progressBar.start(dedupedAssetKeys.length, 0);
+      log.info("batchSize", batchSize);
 
-      await PromisePool.withConcurrency(batchSize || 10)
+      await PromisePool.withConcurrency(batchSize || 500)
         .for(dedupedAssetKeys)
         .handleError(async (err, asset) => {
           log.error(
@@ -563,8 +563,7 @@ async function writeIndices({
     .for(poolArray)
     .handleError(async (err, { index, configLines }) => {
       log.error(
-        `\nFailed writing indices ${index}-${
-          keys[configLines[configLines.length - 1]]
+        `\nFailed writing indices ${index}-${keys[configLines[configLines.length - 1]]
         }: ${err.message}`,
       );
       await sleep(5000);
